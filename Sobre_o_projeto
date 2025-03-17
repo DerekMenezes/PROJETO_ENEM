@@ -1,0 +1,75 @@
+# Análise do Papel da Educação na Mobilidade Social Brasileira - ENEM 2023
+
+## Coleta de Dados
+
+### Fonte dos Dados
+- **Base de dados**: Microdados do ENEM 2023, disponibilizados pelo INEP.
+- **Arquivo**: `MICRODADOS_ENEM_2023.csv` (3.933.955 registros e 76 variáveis).
+
+### Variáveis Consideradas
+Foram selecionadas 35 variáveis relacionadas às hipóteses do estudo, incluindo:
+- **Dados do participante**: Faixa etária, sexo, estado civil, tipo de escola, situação de conclusão do ensino médio.
+- **Notas**: Notas nas provas de Ciências da Natureza, Humanas, Linguagens, Matemática e Redação.
+- **Questionário socioeconômico**: Escolaridade dos pais (Q001, Q002), renda familiar (Q006), ocupação dos pais (Q003, Q004), acesso a recursos domiciliares (Q024, Q025).
+
+### Variáveis Ignoradas
+Foram removidas colunas irrelevantes para as hipóteses, como:
+- Códigos de município/UF.
+- Respostas e gabaritos das provas.
+- Variáveis redundantes (e.g., múltiplas perguntas sobre posse de bens).
+
+### Pré-processamento
+- Remoção de colunas usando `df.drop()`.
+- Filtragem de dados para manter apenas variáveis essenciais.
+- Criação de grupos de notas (Grupo 1: ≥720, Grupo 2: ≥650, Grupo 3: ≥500, Grupo 4: <500).
+
+---
+
+## Modelagem
+
+### Hipóteses Testadas
+1. **Capital financeiro** é o principal preditor das notas no ENEM.
+2. **Escolaridade dos pais** influencia diretamente a escolaridade dos estudantes.
+
+### Técnicas Utilizadas
+- **Análise Univariada**: Geração de relatório com `ydata_profiling` para explorar distribuições e estatísticas descritivas.
+- **Classificação**: Uso de `RandomForestClassifier` para prever grupos de notas com base em variáveis socioeconômicas.
+- **Validação Cruzada**: `StratifiedKFold` para avaliar desempenho do modelo.
+- **XGBoost**: Aplicação do XGBoost para encontrar os melhores hiperparâmetros.
+
+### Etapas Principais
+1. **Divisão dos Dados**:
+   - Variáveis preditoras: Escolaridade dos pais, renda familiar, tipo de escola, acesso a computador/internet.
+   - Variável alvo: Grupo de notas (categorizado).
+2. **Treinamento do Modelo**:
+   - Ajuste do `RandomForestClassifier` para identificar importância das variáveis.
+3. **Ajuste dos hiperparâmetros**:
+   - Aplicação do XGBoost.
+
+---
+
+## Conclusões
+
+### Principais Achados
+1. **Capital Financeiro**:
+   - Variáveis como renda familiar (Q006) e posse de computador/internet (Q024, Q025) tiveram alta importância no modelo, confirmando a hipótese de que o capital econômico é um preditor significativo das notas.
+   - Estudantes de famílias com maior renda tendem a alcançar grupos de notas mais altos (Grupo 1 e 2).
+
+2. **Reprodução da Escolaridade**:
+   - A escolaridade dos pais (Q001, Q002) mostrou correlação positiva com o desempenho dos estudantes, validando a hipótese de reprodução das desigualdades.
+   - Filhos de pais com ensino superior completo têm maior probabilidade de atingir notas para cursos concorridos.
+
+### Recomendações
+- **Políticas Públicas**: Ampliar acesso a recursos educacionais (e.g., internet, computadores) para reduzir disparidades.
+- **Ações Educacionais**: Programas de mentoria para estudantes de famílias com baixa escolaridade.
+
+### Limitações
+- Dados limitados a 2023, sem análise temporal.
+- Variáveis qualitativas do questionário socioeconômico podem requerer categorização mais refinada.
+
+---
+
+**Referências**  
+- Dados: [Portal INEP](https://www.gov.br/inep/pt-br)  
+- Notas de Corte: [Quero Bolsa](https://querobolsa.com.br/sisu/notas-de-corte)  
+- Framework: [YData Profiling](https://ydata.ai/)
